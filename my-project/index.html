@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <h1>Number guessing game</h1>
+    <p>
+      We have selected a random number between 1 and 100. See if you can guess
+      it in 10 turns or fewer. We'll tell you if your guess was too high or too
+      low.
+    </p>
+    <label>Enter a Guess</label>
+    <input type="text" id="guesses" />
+    <button id="submit">Submit Guess</button>
+    <p id="previousGuess">previous Guess:</p>
+    <p id="message"></p>
+    <p id="clues"></p>
+  
+    <script>
+      let randomNumber = Math.floor(Math.random() * 100)+1;
+      console.log(randomNumber);
+      const guesses=document.getElementById("guesses")
+      const submitButton=document.getElementById("submit")
+      const previousGuessEl=document.getElementById("previousGuess")
+      const messageEl=document.getElementById("message")
+      const cluesEl=document.getElementById("clues")
+     
+      let guesscount=1;
+      let resetButton;
+      
+      function userguesscheck(){
+        let UserGuessNumber=Number(guesses.value)
+        console.log(UserGuessNumber)
+        if(guesscount===1){
+          previousGuessEl.textContent='Previous Guess:'
+        }
+        previousGuessEl.textContent=`${previousGuessEl.textContent} ${UserGuessNumber}`
+
+        if(UserGuessNumber===randomNumber){
+          messageEl.textContent='Congratulation You have won';
+          messageEl.style.backgroundColor='green';
+          cluesEl.textContent=""
+          setGameOver()
+        }
+        else if(guesscount===10){
+          messageEl.textContent='!!Game Over!!';
+          cluesEl.textContent=""
+          setGameOver()
+        }
+        else{
+          messageEl.textContent='Wrong'
+          messageEl.style.backgroundColor='red'
+          if(UserGuessNumber>randomNumber){
+            cluesEl.textContent="Last clue was too high"
+          }
+          else{
+            cluesEl.textContent="Last clue was too low"
+          }
+        }
+        guesscount++;
+        guesses.value='';
+      
+      
+        function setGameOver(){
+        guesses.disabled=true
+          submitButton.disabled=true
+          resetButton=document.createElement('button')
+          resetButton.textContent="start new game"
+          document.body.appendChild(resetButton)
+          resetButton.addEventListener('click',resetgame)
+      }
+      }
+      function resetgame(){
+        guesscount=1
+        resetButton.parentNode.removeChild(resetButton);
+        guesses.disabled=false
+        submitButton.disabled=false
+        guesses.textContent="";
+        previousGuessEl.textContent='';
+        messageEl.textContent='';
+        randomNumber = Math.floor(Math.random() * 100)+1;
+
+      }
+      submitButton.addEventListener('click',userguesscheck)
+     
+    </script>
+  </body>
+</html>
